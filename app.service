@@ -1,0 +1,5 @@
+[Unit]
+Description = Diet server
+
+[Service]
+ExecStart = /var/www/app

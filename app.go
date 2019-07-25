@@ -13,6 +13,9 @@ import (
 var (
 	name            string = os.Getenv("BOT_NAME")
 	slackWebhookUrl string = os.Getenv("SLACK_WEBHOOK_URL")
+	clientId        string = os.Getenv("CLIENT_ID")
+	secret          string = os.Getenv("SECRET")
+	authUrl         string = "https://account.withings.com/oauth2_user/authorize2"
 )
 
 type Slack struct {
@@ -25,10 +28,25 @@ func home(c echo.Context) error {
 }
 
 func auth(c echo.Context) error {
+	// endpoint のスキームでミスがあったら、ここでチェックできる。
+	//u, err := url.Parse(authUrl)
+	//if err != nil {
+	//	return err
+	//}
+
+	//// 元のURLにクエリパラメータがついていた場合の上書きを防げる。
+	//q := u.Query()
+	//q.Set("response_type", "code")
+	//q.Set("client_id", clientId)
+	//q.Set("scope", "user.metrics")
+	//u.RawQuery = q.Encode()
+	//
+	//req, err := http.Get(u.String())
 	return c.String(http.StatusOK, "OK")
 }
 
 func finshAuth(c echo.Context) error {
+	//authenticationCode := c.Param("code")
 	return c.String(http.StatusOK, "Completed!")
 }
 
@@ -54,6 +72,14 @@ func echoToSlack(c echo.Context) error {
 	return c.String(http.StatusOK, "OK")
 }
 
+func authCallBack(c echo.Context) error {
+	code := c.QueryParam("code")
+	state := c.QueryParam("state")
+
+	message := fmt.Sprintf("code:%s\nstate:%s", code, state)
+	return c.String(http.StatusOK, message)
+}
+
 func main() {
 	e := echo.New()
 	e.GET("/", home)
@@ -61,6 +87,8 @@ func main() {
 	e.GET("/ok", finshAuth)
 	e.GET("/members", members)
 	e.GET("/echo", echoToSlack)
+	e.GET("/callback", authCallBack)
 
-	e.Logger.Fatal(e.Start(":8080"))
+
+	e.Logger.Fatal(e.Start(":80"))
 }

@@ -1,0 +1,27 @@
+- name: install
+  hosts: all
+  remote_user: ubuntu
+  become: yes
+
+  vars:
+    app_file: ../deploy/app
+    unit_file: ../app.service
+  tasks:
+    - name: nyan
+      copy:
+        src: "{{ app_file }}"
+        dest: /var/www/app
+        mode: 0655
+
+    - name: add unit file
+      copy:
+        src: "{{ unit_file }}"
+        dest: /etc/systemd/system/app.service
+
+    - name: systemd
+      systemd:
+        name: app.service
+        state: started
+        daemon_reload: yes
+        enabled: yes
+
