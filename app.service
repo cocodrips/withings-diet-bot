@@ -1,5 +1,13 @@
 [Unit]
-Description = Diet server
+Description=Diet server
 
 [Service]
-ExecStart = /var/www/app
+EnvironmentFile=/var/www/env
+
+ExecStart=/var/www/app
+
+ExecStop=/bin/kill -HUP $MAINPID
+
+ExecReload=/bin/kill -HUP $MAINPID && /var/www/app
+
+Restart=yes

@@ -6,8 +6,9 @@
   vars:
     app_file: ../deploy/app
     unit_file: ../app.service
+    env_file: ../.env
   tasks:
-    - name: nyan
+    - name: add app file
       copy:
         src: "{{ app_file }}"
         dest: /var/www/app
@@ -18,10 +19,15 @@
         src: "{{ unit_file }}"
         dest: /etc/systemd/system/app.service
 
+    - name: add env file
+      copy:
+        src: "{{ env_file }}"
+        dest: /var/www/env
+
     - name: systemd
       systemd:
         name: app.service
-        state: started
+        state: restarted
         daemon_reload: yes
         enabled: yes
 
