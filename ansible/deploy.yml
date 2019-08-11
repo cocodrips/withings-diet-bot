@@ -8,6 +8,18 @@
     unit_file: ../app.service
     env_file: ../.env
   tasks:
+    - name: make /var/www
+      become: yes
+      file:
+        path: /var/www
+        state: directory
+
+    - name: make /var/log/app
+      become: yes
+      file:
+        path: /var/log/app
+        state: directory
+
     - name: add app file
       copy:
         src: "{{ app_file }}"
