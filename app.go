@@ -16,6 +16,7 @@ import (
 
 var (
 	botName  string = os.Getenv("BOT_NAME")
+	port     string = os.Getenv("PORT")
 	dataFile string = "diet-token.json"
 )
 
@@ -71,15 +72,6 @@ func getRanking(c echo.Context) error {
 		})
 	}
 	// Add test user
-	//ranking = append(ranking, UserStatus{
-	//	Ratio: 0.90,
-	//	Name:  "yaseta hito",
-	//})
-	//ranking = append(ranking, UserStatus{
-	//	Ratio: 1.1,
-	//	Name:  "futotta hito",
-	//})
-
 	sort.Slice(ranking, func(i, j int) bool {
 		return ranking[i].Ratio < ranking[j].Ratio
 	})
@@ -87,7 +79,7 @@ func getRanking(c echo.Context) error {
 	//
 	ranks := []string{}
 	for i, status := range (ranking) {
-		s := fmt.Sprintf("%d: %s %.2f", i+1, status.Name, status.Ratio*100)
+		s := fmt.Sprintf("%d: %s %.2f％", i+1, status.Name, status.Ratio*100)
 		ranks = append(ranks, s)
 	}
 
@@ -127,5 +119,5 @@ func main() {
 
 	e.Use(middleware.Recover())
 
-	e.Logger.Fatal(e.Start(":80"))
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 }
