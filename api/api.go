@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"sort"
 	"github.com/cocodrips/withings-diet-bot/slack"
+	"os"
 )
-
 
 type UserStatus struct {
 	Name  string
@@ -69,6 +69,9 @@ func getRanking(c echo.Context) error {
 
 	//
 	ranks := []string{}
+	ranks = append(ranks,
+		fmt.Sprintf("Today's ranking (Compare to %s)",
+			os.Getenv("START_DATE")))
 	for i, status := range (ranking) {
 		s := fmt.Sprintf("%d: %s %.2f％", i+1, status.Name, status.Ratio*100)
 		ranks = append(ranks, s)
@@ -88,4 +91,3 @@ func Rooting(e *echo.Echo) {
 	e.POST("/user/add", saveAccessToken)
 	e.GET("/echo", getRanking)
 }
-

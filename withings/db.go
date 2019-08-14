@@ -29,6 +29,11 @@ func AddUser(user User) {
 		panic(err)
 	}
 
+	log.Infof("Registed %s: access %s refresh %s",
+		user.Name,
+		user.AccessToken,
+		user.RefreshToken)
+
 	ioutil.WriteFile(dataFile, userJson, os.ModePerm)
 }
 

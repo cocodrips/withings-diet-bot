@@ -153,7 +153,8 @@ func RefreshToken(user User) User {
 	tokenResponse := TokenResponse{}
 	err = json.Unmarshal(body, &tokenResponse)
 
-	log.Infof("access %s refresh %s",
+	log.Infof("%s access %s refresh %s",
+		user.Name,
 		tokenResponse.AccessToken,
 		tokenResponse.RefreshToken)
 
